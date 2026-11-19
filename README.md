@@ -4,6 +4,8 @@ An NLP project that classifies tweets about brands and games into four sentiment
 **Negative, Positive, Neutral, Irrelevant** — using NLTK text preprocessing and a Keras
 **Embedding + LSTM** neural network. Includes an interactive **Streamlit** demo.
 
+**🔗 Live demo:** https://tweet-sentiment-89.streamlit.app/
+
 ## 🚀 Features
 
 - Tweet cleaning: Unicode normalisation, lower-casing, removal of URLs, mentions, HTML, digits and
@@ -67,7 +69,9 @@ The required NLTK data (`punkt_tab`, `stopwords`, `wordnet`) is downloaded autom
 
 ## ▶️ Run
 
-Streamlit demo (uses the trained model in `models/`):
+Live demo: https://tweet-sentiment-89.streamlit.app/
+
+Run the Streamlit demo locally (uses the trained model in `models/`):
 
 ```bash
 streamlit run app.py
