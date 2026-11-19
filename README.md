@@ -1,82 +1,96 @@
-🐦 Twitter Data Analysis / Machine Learning Project
+# 🐦 Twitter Sentiment Analysis (LSTM)
 
-A Machine Learning & NLP project focused on analyzing Twitter data to extract insights such as sentiment, patterns, or user behavior depending on the notebook implementation.
+An NLP project that classifies tweets about brands and games into four sentiment classes —
+**Negative, Positive, Neutral, Irrelevant** — using NLTK text preprocessing and a Keras
+**Embedding + LSTM** neural network. Includes an interactive **Streamlit** demo.
 
-This project demonstrates how to work with real-world social media data using Natural Language Processing and machine learning techniques.
+**🔗 Live demo:** https://tweet-sentiment-89.streamlit.app/
 
-📌 Project Overview
+## 🚀 Features
 
-Twitter is a rich source of real-time text data.
-In this project, we analyze Twitter data to:
+- Tweet cleaning: Unicode normalisation, lower-casing, removal of URLs, mentions, HTML, digits and
+  punctuation, hashtag text kept, stop-word removal, lemmatisation, duplicate-word removal
+- Keras `Tokenizer` (20,000-word vocabulary) and padded sequences
+- LSTM classifier: `Embedding(100) → LSTM(100) → Dense(32, relu) → Dense(4, softmax)`
+- Trained model saved in `models/` and reused by the app
+- **Streamlit demo**:
+  - Analyze a tweet: predicted class, confidence, class probabilities, cleaned tokens
+  - Batch analysis: one tweet per line or CSV upload (`text` column), distribution chart, CSV download
+  - Model performance: accuracy, per-class precision/recall/F1, confusion matrix, training history
+  - Dataset: label distribution and sample tweets
 
-Clean and preprocess tweets
-Perform text feature extraction
-Apply NLP techniques
-Build machine learning models (if included in notebook)
-Generate insights from tweet data
-🧠 Key Concepts Covered
-Tweet preprocessing (cleaning, removing noise)
-Tokenization & text normalization
-Stopwords removal
-TF-IDF / Bag of Words feature extraction
-Sentiment / classification modeling (if used)
-Data visualization and analysis
-📊 NLP Concepts Used
-Text cleaning & preprocessing pipeline
-Feature engineering for text data
-Vectorization techniques (TF-IDF / CountVectorizer)
-Classification of text data (if implemented)
-🛠️ Technologies Used
-Python 🐍
-Pandas
-NumPy
-Scikit-learn
-NLTK / NLP tools
-Matplotlib / Seaborn
-Jupyter Notebook
-📂 Project Structure
+## 📊 Dataset & Results
+
+`twitter.csv` – 75,680 labelled tweets (`labels`, `text`). After removing empty and duplicate rows,
+70,251 tweets remain, split 80/20 (`random_state=42`).
+
+| Metric (test set, 14,051 tweets) | Value |
+|---|---|
+| Accuracy | 82.8% |
+| Macro F1 | 0.824 |
+
+Training used `validation_split=0.1` and early stopping on validation loss (best weights: epoch 2).
+
+> **Note:** the dataset contains many paraphrased copies of the same tweet. About 20% of test tweets
+> have an identical cleaned text in the training set, so the test score is likely optimistic for
+> completely new tweets.
+
+## 🛠️ Tech Stack
+
+Python · pandas · NumPy · NLTK · scikit-learn · TensorFlow / Keras · Altair · Streamlit · Jupyter
+
+## 📂 Project Structure
+
+```
 twitter/
-│
-├── twitter.ipynb   # Main notebook
-├── data/          # Dataset (tweets)
-├── models/        # ML models (if any)
-└── README.md
-🚀 How to Run
-1. Clone repository
+├── twitter.csv              # Dataset
+├── twitter.ipynb            # Original exploration / modelling notebook
+├── twitter_sentiment.py     # Preprocessing, training, saving and prediction
+├── app.py                   # Streamlit demo
+├── models/
+│   ├── sentiment_lstm.keras # Trained model
+│   ├── tokenizer.json       # Fitted Keras tokenizer
+│   └── metadata.json        # maxlen, labels, metrics, confusion matrix, history
+├── requirements.txt
+└── .streamlit/config.toml
+```
+
+## 📦 Installation
+
+```bash
 git clone https://github.com/amirafarhan/twitter.git
-2. Install dependencies
-pip install pandas numpy scikit-learn nltk matplotlib seaborn
-3. Run Jupyter Notebook
-jupyter notebook
-4. Open file
-twitter.ipynb
-📈 Possible Outputs
+cd twitter
+python -m venv venv
+# Windows: venv\Scripts\activate    Linux/Mac: source venv/bin/activate
+pip install -r requirements.txt
+```
 
-Depending on your notebook, the project may include:
+The required NLTK data (`punkt_tab`, `stopwords`, `wordnet`) is downloaded automatically on first use.
 
-Tweet sentiment distribution
-Word frequency analysis
-Classification accuracy (if ML model used)
-Visual insights from Twitter data
-🔮 Future Improvements
-Add real-time Twitter API streaming
-Build sentiment analysis dashboard (Streamlit)
-Use deep learning models (LSTM / BERT)
-Add topic modeling (LDA)
-Deploy as web app
-💡 Key Insight
+## ▶️ Run
 
-This project shows how social media data can be transformed into structured insights using NLP and machine learning techniques.
+Live demo: https://tweet-sentiment-89.streamlit.app/
 
-👨‍💻 Author
+Run the Streamlit demo locally (uses the trained model in `models/`):
 
-Amira Farhan
-Machine Learning & Computer Vision Engineer
+```bash
+streamlit run app.py
+```
 
-⭐ Support
+Re-train the model and regenerate `models/` (about 3–5 minutes on CPU):
 
-If you like this project:
+```bash
+python twitter_sentiment.py
+```
 
-⭐ Star the repository
-🍴 Fork it
-🚀 Share it
+Notebook: `pip install jupyter`, run `jupyter notebook`, then open `twitter.ipynb`.
+
+## 🔮 Future Improvements
+
+- Group paraphrased tweets when splitting to get a stricter test estimate
+- Use the entity/topic column of the original dataset as an extra input
+- Compare with a TF-IDF + linear baseline and with transformer models (e.g. BERT)
+
+## 👨‍💻 Author
+
+Amira Farhan – Machine Learning & Computer Vision Engineer
